@@ -12,7 +12,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import DB.DBconnection;
 
 public class LoginApplication extends javax.swing.JPanel {
@@ -141,7 +140,6 @@ public class LoginApplication extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLoginActionPerformed
-
         String enteredUsername = jtemail.getText();
         String enteredPassword = new String(jtpassword.getPassword());
 
