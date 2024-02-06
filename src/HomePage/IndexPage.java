@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
  *
  * @author vit12
@@ -42,6 +41,7 @@ public class IndexPage extends javax.swing.JFrame {
         TotalInactive();
         RecentEnrollment();
     }
+
     private void fetchDataAndUpdateTable() {
         // Use DataRetriever to fetch data and update the table model
         DataRetriever.fetchDataFromDatabase((DefaultTableModel) jTable1.getModel());
@@ -51,9 +51,6 @@ public class IndexPage extends javax.swing.JFrame {
 //        // Assuming you have a JTable named jTable1
 //        StudentData.fetchDataAndDisplay(jTable1);
 //    }
-    
-   
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -979,9 +976,7 @@ public class IndexPage extends javax.swing.JFrame {
                                             .addComponent(LastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(174, 174, 174)))
                         .addGroup(AddpageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(AddpageLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AddpageLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(AddpageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1030,11 +1025,11 @@ public class IndexPage extends javax.swing.JFrame {
                     .addComponent(jLabel24)
                     .addComponent(AddressField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40)
-                .addGroup(AddpageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(AddpageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(AddpageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel25)
-                        .addComponent(PhoneField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(PhoneField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 326, Short.MAX_VALUE))
         );
 
@@ -1189,128 +1184,138 @@ public class IndexPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-    String firstName = FirstNameField.getText();
-    String lastName = LastNameField.getText();
-    String dobText = DOBField.getText();
-    String gender = GenderField.getSelectedItem().toString();
-    String address = AddressField.getText();
-    String phone = PhoneField.getText();
-    String graduated = GradueField.getSelectedItem().toString();
-    String payment = PaymentField.getSelectedItem().toString();
-    String inactive = InactivetField.getSelectedItem().toString();
+        String firstName = FirstNameField.getText();
+        String lastName = LastNameField.getText();
+        String dobText = DOBField.getText();
+        String gender = GenderField.getSelectedItem().toString();
+        String address = AddressField.getText();
+        String phone = PhoneField.getText();
+        String graduated = GradueField.getSelectedItem().toString();
+        String payment = PaymentField.getSelectedItem().toString();
+        String inactive = InactivetField.getSelectedItem().toString();
 
-    // Validate if required fields are not empty
-    if (firstName.isEmpty() || lastName.isEmpty() || dobText.isEmpty() || gender.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    PreparedStatement statement = null;
-
-    try (Connection connection = DBconnection.getConnection()) {
-        statement = connection.prepareStatement("INSERT INTO students (first_name, last_name, DOB, gender, address, phone_number, graduated, payment, in_active) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d'), ?, ?, ?, ?, ?, ?)");
-
-        // Parse and format the date
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        try {
-            LocalDate dob = LocalDate.parse(dobText, inputFormatter);
-            String formattedDob = outputFormatter.format(dob);
-
-            // Set parameters for the prepared statement
-            statement.setString(1, firstName);
-            statement.setString(2, lastName);
-            statement.setString(3, formattedDob); // Use the formatted date
-            statement.setString(4, gender);
-            statement.setString(5, address);
-            statement.setString(6, phone);
-            statement.setString(7, graduated);
-            statement.setString(8, payment);
-            statement.setString(9, inactive);
-
-            // Execute the SQL query
-            int rowsAffected = statement.executeUpdate();
-
-if (rowsAffected > 0) {
-    JOptionPane.showMessageDialog(this, "Student added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-    // Clear input fields after successful insertion
-    FirstNameField.setText("");
-    LastNameField.setText("");
-    DOBField.setText("");
-    AddressField.setText("");
-    PhoneField.setText("");
-
-
-    // Refresh the table or update as needed
-    fetchDataAndUpdateTable();
-} else {
-    JOptionPane.showMessageDialog(this, "Failed to add student.", "Error", JOptionPane.ERROR_MESSAGE);
-}
-
-        } catch (DateTimeParseException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Invalid date format. Please enter the date in dd-MM-yyyy format.", "Error", JOptionPane.ERROR_MESSAGE);
+        // Validate if required fields are not empty
+        if (firstName.isEmpty() || lastName.isEmpty() || dobText.isEmpty() || gender.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Database error. Please check your input and try again.", "Error", JOptionPane.ERROR_MESSAGE);
-    } finally {
-        if (statement != null) {
+        PreparedStatement statement = null;
+
+        try (Connection connection = DBconnection.getConnection()) {
+            statement = connection.prepareStatement("INSERT INTO students (first_name, last_name, DOB, gender, address, phone_number, graduated, payment, in_active) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d'), ?, ?, ?, ?, ?, ?)");
+
+            // Parse and format the date
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
             try {
-                statement.close();
-            } catch (SQLException e) {
+                LocalDate dob = LocalDate.parse(dobText, inputFormatter);
+                String formattedDob = outputFormatter.format(dob);
+
+                // Set parameters for the prepared statement
+                statement.setString(1, firstName);
+                statement.setString(2, lastName);
+                statement.setString(3, formattedDob); // Use the formatted date
+                statement.setString(4, gender);
+                statement.setString(5, address);
+                statement.setString(6, phone);
+                statement.setString(7, graduated);
+                statement.setString(8, payment);
+                statement.setString(9, inactive);
+
+                // Execute the SQL query
+                int rowsAffected = statement.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(this, "Student added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Clear input fields after successful insertion
+                    FirstNameField.setText("");
+                    LastNameField.setText("");
+                    DOBField.setText("");
+                    AddressField.setText("");
+                    PhoneField.setText("");
+
+                    // Refresh the table or update as needed
+                    fetchDataAndUpdateTable();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to add student.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (DateTimeParseException e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Invalid date format. Please enter the date in dd-MM-yyyy format.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error. Please check your input and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
-    }
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        String searchId = Searchinput.getText().trim();
+        String searchInput = Searchinput.getText().trim();
 
-    if (searchId.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please enter an ID to search.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+        if (searchInput.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter an ID or a name to search.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-    model.setRowCount(0);  // Clear existing rows in the table
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);  // Clear existing rows in the table
 
-    try (Connection connection = DBconnection.getConnection()) {
-        String query = "SELECT * FROM students WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, searchId);
+        try (Connection connection = DBconnection.getConnection()) {
+            String query;
+            PreparedStatement statement;
+
+            // Check if the input is a numeric ID
+            if (searchInput.matches("\\d+")) {
+                // Search by ID
+                query = "SELECT * FROM students WHERE id = ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, searchInput);
+            } else {
+                // Search by first name and last name
+                query = "SELECT * FROM students WHERE CONCAT(first_name, ' ', last_name) LIKE ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, "%" + searchInput + "%");
+            }
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     // Add a row to the table for each result
                     Object[] row = {
-                            resultSet.getString("id"),
-                            resultSet.getString("first_name"),
-                            resultSet.getString("last_name"),
-                            resultSet.getString("DOB"),
-                            resultSet.getString("address"),
-                            resultSet.getString("gender"),
-                            resultSet.getString("phone_number"),
-                            resultSet.getString("graduated"),
-                            resultSet.getString("payment"),
-                            resultSet.getString("in_active")
+                        resultSet.getString("id"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("DOB"),
+                        resultSet.getString("address"),
+                        resultSet.getString("gender"),
+                        resultSet.getString("phone_number"),
+                        resultSet.getString("graduated"),
+                        resultSet.getString("payment"),
+                        resultSet.getString("in_active")
                     };
                     model.addRow(row);
                 }
             }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Database error. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void SearchinputMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SearchinputMouseClicked
-        
+
         Searchinput.setText("");
     }//GEN-LAST:event_SearchinputMouseClicked
 
@@ -1319,32 +1324,32 @@ if (rowsAffected > 0) {
     }//GEN-LAST:event_DelectBtneventActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-         int selectedRow = jTable1.getSelectedRow();
+        int selectedRow = jTable1.getSelectedRow();
 
-    if (selectedRow != -1) {
-        Object IDValue = jTable1.getValueAt(selectedRow, 0);
-        Object FirstNameValue = jTable1.getValueAt(selectedRow, 1);
-        Object LastNameValue = jTable1.getValueAt(selectedRow, 2);
-        Object DOBValue = jTable1.getValueAt(selectedRow, 3);
-        Object GenderValue = jTable1.getValueAt(selectedRow, 5);  // Assuming index 4 is skipped
-        Object AddressValue = jTable1.getValueAt(selectedRow, 4); 
-        Object PhoneNumberValue = jTable1.getValueAt(selectedRow, 6);
-        Object GraduatedValue = jTable1.getValueAt(selectedRow, 7);
-        Object PaymentValue = jTable1.getValueAt(selectedRow, 8);
-        Object InActiveValue = jTable1.getValueAt(selectedRow, 9);
+        if (selectedRow != -1) {
+            Object IDValue = jTable1.getValueAt(selectedRow, 0);
+            Object FirstNameValue = jTable1.getValueAt(selectedRow, 1);
+            Object LastNameValue = jTable1.getValueAt(selectedRow, 2);
+            Object DOBValue = jTable1.getValueAt(selectedRow, 3);
+            Object GenderValue = jTable1.getValueAt(selectedRow, 5);  // Assuming index 4 is skipped
+            Object AddressValue = jTable1.getValueAt(selectedRow, 4);
+            Object PhoneNumberValue = jTable1.getValueAt(selectedRow, 6);
+            Object GraduatedValue = jTable1.getValueAt(selectedRow, 7);
+            Object PaymentValue = jTable1.getValueAt(selectedRow, 8);
+            Object InActiveValue = jTable1.getValueAt(selectedRow, 9);
 
-        // Set the values in the text fields
-        IDevent.setText(String.valueOf(IDValue));
-        FirstNameevent.setText(String.valueOf(FirstNameValue));
-        LastNameevent.setText(String.valueOf(LastNameValue));
-        DOBevent.setText(String.valueOf(DOBValue));
-        Genderevent.setText(String.valueOf(GenderValue));
-        Addressevent.setText(String.valueOf(AddressValue));
-        Phoneevent.setText(String.valueOf(PhoneNumberValue));
-        Graduateevent.setText(String.valueOf(GraduatedValue));
-        Paymentevent.setText(String.valueOf(PaymentValue));
-        Inactiveevent.setText(String.valueOf(InActiveValue));
-    }
+            // Set the values in the text fields
+            IDevent.setText(String.valueOf(IDValue));
+            FirstNameevent.setText(String.valueOf(FirstNameValue));
+            LastNameevent.setText(String.valueOf(LastNameValue));
+            DOBevent.setText(String.valueOf(DOBValue));
+            Genderevent.setText(String.valueOf(GenderValue));
+            Addressevent.setText(String.valueOf(AddressValue));
+            Phoneevent.setText(String.valueOf(PhoneNumberValue));
+            Graduateevent.setText(String.valueOf(GraduatedValue));
+            Paymentevent.setText(String.valueOf(PaymentValue));
+            Inactiveevent.setText(String.valueOf(InActiveValue));
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void UpdateButtoneventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UpdateButtoneventMouseClicked
@@ -1391,38 +1396,38 @@ if (rowsAffected > 0) {
     }//GEN-LAST:event_UpdateButtoneventMouseClicked
 
     private void DelectBtneventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DelectBtneventMouseClicked
-         int selectedRow = jTable1.getSelectedRow();
+        int selectedRow = jTable1.getSelectedRow();
 
-    if (selectedRow != -1) {
-        int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?", "Confirmation", JOptionPane.YES_NO_OPTION);
-        
-        if (dialogResult == JOptionPane.YES_OPTION) {
-            Object IDValue = jTable1.getValueAt(selectedRow, 0);
-            
-            // Delete the record from the database
-            if (deleteStudentData((int) IDValue)) {
-                // Display a success message
-                JOptionPane.showMessageDialog(this, "Record deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);    
-                IDevent.setText("");
-                FirstNameevent.setText("");
-                LastNameevent.setText("");
-                DOBevent.setText("");
-                Addressevent.setText("");
-                Genderevent.setText("");
-                Phoneevent.setText("");
-                Graduateevent.setText("");
-                Paymentevent.setText("");
-                Inactiveevent.setText("");
-                refreshTableData();
-            } else {
-                // Display an error message
-                JOptionPane.showMessageDialog(this, "Failed to delete record.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (selectedRow != -1) {
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?", "Confirmation", JOptionPane.YES_NO_OPTION);
+
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                Object IDValue = jTable1.getValueAt(selectedRow, 0);
+
+                // Delete the record from the database
+                if (deleteStudentData((int) IDValue)) {
+                    // Display a success message
+                    JOptionPane.showMessageDialog(this, "Record deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    IDevent.setText("");
+                    FirstNameevent.setText("");
+                    LastNameevent.setText("");
+                    DOBevent.setText("");
+                    Addressevent.setText("");
+                    Genderevent.setText("");
+                    Phoneevent.setText("");
+                    Graduateevent.setText("");
+                    Paymentevent.setText("");
+                    Inactiveevent.setText("");
+                    refreshTableData();
+                } else {
+                    // Display an error message
+                    JOptionPane.showMessageDialog(this, "Failed to delete record.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
+        } else {
+            // Inform the user to select a row before attempting deletion
+            JOptionPane.showMessageDialog(this, "Please select a row to delete.", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
-    } else {
-        // Inform the user to select a row before attempting deletion
-        JOptionPane.showMessageDialog(this, "Please select a row to delete.", "Information", JOptionPane.INFORMATION_MESSAGE);
-    }
     }//GEN-LAST:event_DelectBtneventMouseClicked
 
     private void GradueFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GradueFieldActionPerformed
@@ -1441,31 +1446,30 @@ if (rowsAffected > 0) {
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jTable2MouseClicked
-    
+
     private boolean deleteStudentData(int studentID) {
-    String deleteQuery = "DELETE FROM students WHERE id=?";
-    
-    try (Connection connection = DBconnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+        String deleteQuery = "DELETE FROM students WHERE id=?";
 
-        statement.setInt(1, studentID);
+        try (Connection connection = DBconnection.getConnection(); PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
 
-        int rowsDeleted = statement.executeUpdate();
-        if (rowsDeleted > 0) {
-            System.out.println("Record deleted successfully!");
-            return true;
-        } else {
-            System.out.println("No record was deleted.");
+            statement.setInt(1, studentID);
+
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Record deleted successfully!");
+                return true;
+            } else {
+                System.out.println("No record was deleted.");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
     }
-}
-    
-        private void RecentEnrollment() {
+
+    private void RecentEnrollment() {
         try {
             // Get a connection from your DBconnection class
             Connection connection = DBconnection.getConnection();
@@ -1501,11 +1505,10 @@ if (rowsAffected > 0) {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
+
     }
-    
-    
-        private void refreshTableData() {
+
+    private void refreshTableData() {
         try {
             // Get a connection from your DBconnection class
             Connection connection = DBconnection.getConnection();
@@ -1541,11 +1544,11 @@ if (rowsAffected > 0) {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-}
-        private boolean updateStudentData(int studentID, String newFirstName, String newLastName /*, other parameters */) {
+    }
+
+    private boolean updateStudentData(int studentID, String newFirstName, String newLastName /*, other parameters */) {
         String updateQuery = "UPDATE students SET first_name=?, last_name=? WHERE id=?";
-        try (Connection connection = DBconnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+        try (Connection connection = DBconnection.getConnection(); PreparedStatement statement = connection.prepareStatement(updateQuery)) {
 
             statement.setString(1, newFirstName);
             statement.setString(2, newLastName);
@@ -1566,6 +1569,7 @@ if (rowsAffected > 0) {
             return false;
         }
     }
+
     private boolean updateStudentData(int studentID, Map<String, Object> updatedFields) {
         if (updatedFields.isEmpty()) {
             // Nothing to update
@@ -1581,8 +1585,7 @@ if (rowsAffected > 0) {
         updateQuery.delete(updateQuery.length() - 2, updateQuery.length()); // Remove the last comma and space
         updateQuery.append(" WHERE id=?");
 
-        try (Connection connection = DBconnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(updateQuery.toString())) {
+        try (Connection connection = DBconnection.getConnection(); PreparedStatement statement = connection.prepareStatement(updateQuery.toString())) {
 
             // Set parameter values for the update query
             int parameterIndex = 1;
@@ -1606,44 +1609,33 @@ if (rowsAffected > 0) {
         }
     }
 
-
-    
-    
-    
-    
-    
-    
-    
     private static class Constants {
-    private static final String SELECT_COUNT_QUERY = "SELECT COUNT(*) FROM students";
-}
+
+        private static final String SELECT_COUNT_QUERY = "SELECT COUNT(*) FROM students";
+    }
+
     private void TotalStudent() {
-         try (Connection connection = DBconnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(Constants.SELECT_COUNT_QUERY);
-         ResultSet resultSet = statement.executeQuery()) {
+        try (Connection connection = DBconnection.getConnection(); PreparedStatement statement = connection.prepareStatement(Constants.SELECT_COUNT_QUERY); ResultSet resultSet = statement.executeQuery()) {
 
-        if (resultSet.next()) {
-            int rowCount = resultSet.getInt(1);
-            System.out.println(rowCount);
+            if (resultSet.next()) {
+                int rowCount = resultSet.getInt(1);
+                System.out.println(rowCount);
 
-            // Make sure jLabelTotalStudentNumber is not null before calling setText
-            if (jLabelTotalStudentNumber != null) {
-                jLabelTotalStudentNumber.setText(String.valueOf(rowCount));
-            } else {
-                System.err.println("jLabelTotalStudentNumber is null. Make sure it's properly initialized.");
+                // Make sure jLabelTotalStudentNumber is not null before calling setText
+                if (jLabelTotalStudentNumber != null) {
+                    jLabelTotalStudentNumber.setText(String.valueOf(rowCount));
+                } else {
+                    System.err.println("jLabelTotalStudentNumber is null. Make sure it's properly initialized.");
+                }
             }
-        }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-    }
-    
-    
+
     private void TotalGraduated() {
-               try (Connection connection = DBconnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(QueryConstants.SELECT_GRADUATED_COUNT_QUERY);
-             ResultSet resultSet = statement.executeQuery()) {
+        try (Connection connection = DBconnection.getConnection(); PreparedStatement statement = connection.prepareStatement(QueryConstants.SELECT_GRADUATED_COUNT_QUERY); ResultSet resultSet = statement.executeQuery()) {
 
             if (resultSet.next()) {
                 int graduatedCount = resultSet.getInt(1);
@@ -1664,16 +1656,13 @@ if (rowsAffected > 0) {
     }
 
     // Constants for SQL queries
-       private static class QueryConstants {
+    private static class QueryConstants {
+
         private static final String SELECT_GRADUATED_COUNT_QUERY = "SELECT COUNT(*) FROM students WHERE graduated = 'yes'";
     }
-    
-       
-       
-      private void TotalUnpaid() {
-        try (Connection connection = DBconnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UpdatedQueryConstants.SELECT_UNPAID_COUNT_QUERY);
-             ResultSet resultSet = statement.executeQuery()) {
+
+    private void TotalUnpaid() {
+        try (Connection connection = DBconnection.getConnection(); PreparedStatement statement = connection.prepareStatement(UpdatedQueryConstants.SELECT_UNPAID_COUNT_QUERY); ResultSet resultSet = statement.executeQuery()) {
 
             if (resultSet.next()) {
                 int unpaidCount = resultSet.getInt(1);
@@ -1694,14 +1683,12 @@ if (rowsAffected > 0) {
 
     // Constants for SQL queries
     private static class UpdatedQueryConstants {
+
         private static final String SELECT_UNPAID_COUNT_QUERY = "SELECT COUNT(*) FROM students WHERE payment = 'no'";
     }
 
-       
-     private void TotalInactive() {
-        try (Connection connection = DBconnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(AlternativeQueryConstants.SELECT_INACTIVE_COUNT_QUERY);
-             ResultSet resultSet = statement.executeQuery()) {
+    private void TotalInactive() {
+        try (Connection connection = DBconnection.getConnection(); PreparedStatement statement = connection.prepareStatement(AlternativeQueryConstants.SELECT_INACTIVE_COUNT_QUERY); ResultSet resultSet = statement.executeQuery()) {
 
             if (resultSet.next()) {
                 int inactiveCount = resultSet.getInt(1);
@@ -1722,10 +1709,10 @@ if (rowsAffected > 0) {
 
     // Constants for SQL queries
     private static class AlternativeQueryConstants {
+
         private static final String SELECT_INACTIVE_COUNT_QUERY = "SELECT COUNT(*) FROM students WHERE in_active = 'yes'";
     }
 
-       
     /**
      * @param args the command line arguments
      */
